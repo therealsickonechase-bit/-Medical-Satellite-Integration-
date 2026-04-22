@@ -1,0 +1,8 @@
+'destination_address': f"192.168.<current_tab_state>
+Local Machine: Windows ...
+
+cd C:\path\to\your\script
+python self_modeling.py
+
+
+If you want, paste your whole file after you edit it and I’ll verify it’s syntactically clean.
