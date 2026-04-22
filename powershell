@@ -1,0 +1,44 @@
+    # Generate realistic packet data
+    for i in range(500):
+        protocol = protocols[i % len(protocols)]
+        return_value = return_values[i % len(return_values)]
+        
+        # Create diverse packet features
+        packet_data = {
+            'packet_id': f"PKT-{i:04d}",
+            'timestamp': datetime.fromtimestamp(time.time() + i * 10).isoformat(),
+            'source_address': f"192.168.1.{i % 255}",
+            'destination_address': f"10.0.0.{i % 255}",
+            'payload_hash': hashlib.sha256(f"payload-{i}".encode()).hexdigest(),
+            'payload_size': (i * 37) % (1024 * 1024),
+            'protocol': protocol,
+            'return_value': return_value,
+            'metadata': {
+                'sequence': i,
+                'importance': 'high' if i % 50 == 0 else 'normal'
+            },
+            'features': {
+                'latency_ms': (i * 3) % 200,
+                'throughput_kbps': 1000 + (i * 5) % 5000
+            }
+        }
+        
+        result = system.ingest_packet(packet_data)
+        
+        if i % 50 == 0:
+            print(f"[{i:03d}] Progress: {result['evolution_progress']*100:.1f}% | "
+                  f"Consistency: {result['self_consistency']:.3f} | "
+                  f"Accuracy: {result['self_accuracy']:.3f}")
+            time.sleep(0.01)
+    
+    print("\n📊 FINAL SELF-MODEL SNAPSHOT")
+    snapshot = system.get_self_model_snapshot()
+    print(json.dumps(snapshot.__dict__, indent=2, default=str))
+
+    print("\n🔮 EVOLUTION PREDICTION")
+    prediction = system.predict_self_evolution(future_packets=1000)
+    print(json.dumps(prediction, indent=2, default=str))
+
+
+if __name__ == "__main__":
+    demonstrate_self_modeling()
